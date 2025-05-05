@@ -3,6 +3,8 @@
 ## - uncomment the lines corresponding to used pins
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnC_IBUF]
+
 ## Clock signal
 #set_property PACKAGE_PIN W5 [get_ports clk]							
 	#set_property IOSTANDARD LVCMOS33 [get_ports clk]

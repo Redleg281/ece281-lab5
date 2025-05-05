@@ -55,16 +55,11 @@ signal w_mux_result:std_logic_vector (7 downto 0);
 signal w_hund: std_logic_vector(3 downto 0);
 signal w_tens: std_logic_vector(3 downto 0);
 signal w_ones: std_logic_vector(3 downto 0);
-signal w_sign: std_logic;
+signal w_sign: std_logic_vector(3 downto 0);
+
 
 signal w_hex: std_logic_vector(3 downto 0);
 signal w_seg_out: std_logic_vector(6 downto 0);
-
-
-
-
-
-
   
   
 	-- declare components and signals
@@ -144,7 +139,7 @@ controller_fsm_inst : controller_fsm port map(
     );
 
 
-DFlipFlop: process(w_cycle)
+DFlipFlop: process(w_cycle)---- maybe have to add a signal, not directly link to sw (7-0)
 begin 
     if rising_edge(w_cycle(0)) then
         w_i_A <= sw(7 downto 0);
@@ -155,7 +150,6 @@ end process;
 
 
 ALU_inst: ALU port map(
-    
     i_op => sw(2 downto 0),
     i_A => w_i_A,
     i_B => w_i_B,
@@ -165,22 +159,22 @@ ALU_inst: ALU port map(
 
 ---mux after ALU:
 with w_cycle select
-w_mux_result <= i_a when "0001",  
-            i_b when "0010",
+w_mux_result <= w_i_A when "0001",  
+            w_i_B when "0010",
             w_result when "0100",
             "00000000" when "1000",
             "00000000" when others;
         
 TwosComp_inst: twos_comp port map(
     i_bin => w_result,
-    o_sign => w_sign,
+    o_sign => w_sign(0),
     o_hund => w_hund,
     o_tens => w_tens,
     o_ones => w_ones
 );	
 
-TDM4_inst: TDM4 port map(
-	generic map (k_WIDTH => 7)
+TDM4_inst: TDM4
+	generic map (k_WIDTH => 4)
     port map (
         i_reset => btnU,
         i_clk => w_TDM4_clk,
@@ -198,10 +192,11 @@ sevenseg_decoder_inst: sevenseg_decoder
      o_seg_n => w_seg_out
      );
      
+
 with w_sign select
-o_seg <= w_seg_out when '0',  
-         "0000001" when '1',
-    
+seg <= w_seg_out when "0001",  
+         "0000001" when "0000",
+         "1010101" when others;
 	-- CONCURRENT STATEMENTS ----------------------------
 	
 
