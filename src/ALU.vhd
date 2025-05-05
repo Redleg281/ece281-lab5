@@ -91,7 +91,7 @@ begin
     w_ResOr <= i_A or i_B;
     
     
-process is 
+MuxProc: process(i_A,i_B,i_Op,W_ResAdd,w_ResSub,w_CoutAdd,w_CoutSub)
 begin 
 
     if i_Op = "000" then
@@ -105,7 +105,7 @@ begin
     else
         w_result <= "00000000";
     end if;
-        o_result <= w_result;
+
     
  ---------- Flags
  
@@ -139,7 +139,7 @@ begin
     end if;
     
 end process;
-            
+o_result   <= w_result;           
 o_flags(0) <= w_overflowFlag;
 o_flags(1) <= w_carryFlag;
 o_flags(2) <= w_zeroFlag;
