@@ -39,7 +39,42 @@ end controller_fsm;
 
 architecture FSM of controller_fsm is
 
+  	signal f_Q : std_logic_vector (3 downto 0) := "1000"; 
+  	signal f_Q_next : std_logic_vector (3 downto 0) := "1000"; 
+
 begin
+	-- CONCURRENT STATEMENTS --------------------------------------------------------	
+    ---------------------------------------------------------------------------------
+	
+	f_Q_next(0) <= f_Q(3);
+	f_Q_next(1) <= f_Q(0);
+	f_Q_next(2) <= f_Q(1);
+	f_Q_next(3) <= f_Q(2);
+	
+	-- add the reset in the rising edge portion not here
+	
+	-- PROCESSES --------------------------------------------------------------------
+    
+    o_cycle(0) <= f_Q(0);
+    o_cycle(1) <= f_Q(1);
+    o_cycle(2) <= f_Q(2);
+    o_cycle(3) <= f_Q(3);
+    
+	-----------------------------------------------------					   
+				  
+   register_proc : process (i_adv, i_reset)
+    begin
+    if (rising_edge(i_adv)) then
+        if i_reset = '1' then
+            f_Q <= "1000";        
+        else 
+            f_Q <= f_Q_next;    -- next state becomes current state
+        end if;
+    end if;
+    
+    end process register_proc;			  
+
+
 
 
 end FSM;
