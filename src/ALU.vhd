@@ -129,9 +129,20 @@ begin
         w_carryFlag <= '0';
     end if;
     
+    if (i_A(7) xor i_B(7) xor i_Op(0)) = '0'
+       and
+       (i_A(7) xor (w_ResAdd(7) or w_ResSub(7))) = '1'
+       and
+       i_Op(1) = '1' then
+       w_overflowFlag <= '1';
+       else w_overflowFlag <= '0';
+    end if;
     
 end process;
             
-
+o_flags(0) <= w_overflowFlag;
+o_flags(1) <= w_carryFlag;
+o_flags(2) <= w_zeroFlag;
+o_flags(3) <= w_negativeFlag;
 
 end Behavioral;
