@@ -144,11 +144,11 @@ controller_fsm_inst : controller_fsm port map(
     );
 
 
-DFlipFlop: process(o_cycle)
+DFlipFlop: process(w_cycle)
 begin 
-    if rising_edge(o_cycle(0)) then
+    if rising_edge(w_cycle(0)) then
         w_i_A <= sw(7 downto 0);
-    elsif if rising_edge(o_cycle(1)) then
+    elsif rising_edge(w_cycle(1)) then
         w_i_B <= sw(7 downto 0);
     end if;
 end process;
@@ -164,18 +164,19 @@ ALU_inst: ALU port map(
 );
 
 ---mux after ALU:
-w_mux_result <= i_A when "0001",  
-            i_B when "0010",
+with w_cycle select
+w_mux_result <= i_a when "0001",  
+            i_b when "0010",
             w_result when "0100",
             "00000000" when "1000",
-            else '0';
+            "00000000" when others;
         
 TwosComp_inst: twos_comp port map(
-    i_bin <= w_result,
-    o_sign <= w_sign,
-    o_hund <= w_hund,
-    o_tens <= w_tens,
-    o_ones <= w_ones,
+    i_bin => w_result,
+    o_sign => w_sign,
+    o_hund => w_hund,
+    o_tens => w_tens,
+    o_ones => w_ones
 );	
 
 TDM4_inst: TDM4 port map(
@@ -196,6 +197,10 @@ sevenseg_decoder_inst: sevenseg_decoder
      i_Hex => w_hex,
      o_seg_n => w_seg_out
      );
+     
+with w_sign select
+o_seg <= w_seg_out when '0',  
+         "0000001" when '1',
     
 	-- CONCURRENT STATEMENTS ----------------------------
 	
