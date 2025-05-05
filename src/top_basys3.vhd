@@ -142,10 +142,12 @@ controller_fsm_inst : controller_fsm port map(
 DFlipFlop: process(w_cycle)---- maybe have to add a signal, not directly link to sw (7-0)
 begin 
     if rising_edge(w_cycle(0)) then
-        w_i_A <= sw(7 downto 0);
-    elsif rising_edge(w_cycle(1)) then
-        w_i_B <= sw(7 downto 0);
-    end if;
+        if w_cycle = "0000" then
+            w_i_A <= sw(7 downto 0);
+        elsif w_cycle = "0001" then
+            w_i_B <= sw(7 downto 0);
+        end if;
+     end if;
 end process;
 
 
