@@ -49,6 +49,7 @@ signal w_cycle: std_logic_vector (3 downto 0);
 signal w_TDM4_clk: std_logic;
 signal w_i_A: std_logic_vector (7 downto 0);
 signal w_i_B: std_logic_vector (7 downto 0);
+signal w_op : std_logic_vector (2 downto 0);
 signal w_result:std_logic_vector (7 downto 0);
 signal w_mux_result:std_logic_vector (7 downto 0);
 
@@ -147,11 +148,14 @@ begin
      if rising_edge(w_cycle(2)) then
         w_i_B <= sw(7 downto 0);
      end if;
+     if rising_edge(w_cycle(3)) then
+        w_op <= sw(2 downto 0);
+     end if;
 end process;
 
 
 ALU_inst: ALU port map(
-    i_op => sw(2 downto 0),
+    i_op => w_op,
     i_A => w_i_A,
     i_B => w_i_B,
     o_flags => led(15 downto 12),
@@ -167,11 +171,11 @@ begin
 --            w_result when "0100",
 --            "00000000" when "1000",
 --            "00000000" when others;
-    if (w_cycle = "0001") then
+    if (w_cycle = "0010") then
     w_mux_result <= w_i_A;
-    elsif (w_cycle = "0010") then
+    elsif (w_cycle = "0100") then
     w_mux_result <= w_i_B;
-    elsif(w_cycle = "0100") then
+    elsif(w_cycle = "1000") then
     w_mux_result <= w_result;
     else
     w_mux_result <= "00000000";
@@ -206,6 +210,7 @@ sevenseg_decoder_inst: sevenseg_decoder
      );
      
 seg <= w_seg_out;
+led(3 downto 0) <= w_cycle;
 --with w_sign select
 --seg <= w_seg_out when "0000",  
 --         "0111111" when "0001",
