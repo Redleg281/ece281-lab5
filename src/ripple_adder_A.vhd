@@ -69,7 +69,7 @@ begin
         Cout  => w_carry(3)
     );
     
-    full_adder_4: full_adder
+     full_adder_4: full_adder
     port map(
         A     => A(4),
         B     => B(4),
@@ -78,7 +78,7 @@ begin
         Cout  => w_carry(4)
     );
     
-    full_adder_5: full_adder
+     full_adder_5: full_adder
     port map(
         A     => A(5),
         B     => B(5),
@@ -87,7 +87,7 @@ begin
         Cout  => w_carry(5)
     );
     
-    full_adder_6: full_adder
+     full_adder_6: full_adder
     port map(
         A     => A(6),
         B     => B(6),
@@ -96,11 +96,11 @@ begin
         Cout  => w_carry(6)
     );
     
-    full_adder_7: full_adder
+     full_adder_7: full_adder
     port map(
         A     => A(7),
         B     => B(7),
-        Cin   => w_carry(6),
+        Cin   => w_carry(5),
         S     => S(7),
         Cout  => Cout
     );

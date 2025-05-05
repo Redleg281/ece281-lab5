@@ -141,12 +141,11 @@ controller_fsm_inst : controller_fsm port map(
 
 DFlipFlop: process(w_cycle)---- maybe have to add a signal, not directly link to sw (7-0)
 begin 
-    if rising_edge(w_cycle(0)) then
-        if w_cycle = "0000" then
-            w_i_A <= sw(7 downto 0);
-        elsif w_cycle = "0001" then
-            w_i_B <= sw(7 downto 0);
-        end if;
+    if rising_edge(w_cycle(1)) then
+        w_i_A <= sw(7 downto 0);
+     end if;
+     if rising_edge(w_cycle(2)) then
+        w_i_B <= sw(7 downto 0);
      end if;
 end process;
 
@@ -160,12 +159,24 @@ ALU_inst: ALU port map(
 );
 
 ---mux after ALU:
-with w_cycle select
-w_mux_result <= w_i_A when "0001",  
-            w_i_B when "0010",
-            w_result when "0100",
-            "00000000" when "1000",
-            "00000000" when others;
+MuxProc : process(w_cycle)
+begin
+--    with w_cycle select
+--    w_mux_result <= w_i_A when "0001",  
+--            w_i_B when "0010",
+--            w_result when "0100",
+--            "00000000" when "1000",
+--            "00000000" when others;
+    if (w_cycle = "0001") then
+    w_mux_result <= w_i_A;
+    elsif (w_cycle = "0010") then
+    w_mux_result <= w_i_B;
+    elsif(w_cycle = "0100") then
+    w_mux_result <= w_result;
+    else
+    w_mux_result <= "00000000";
+    end if;
+end process;
         
 TwosComp_inst: twos_comp port map(
     i_bin => w_result,
@@ -185,7 +196,7 @@ TDM4_inst: TDM4
         i_D1 => w_tens,
         i_D0 => w_ones,
         o_data => w_hex,
-        o_sel => an(3 downto 0)
+        o_sel => an
 	);
 	
 sevenseg_decoder_inst: sevenseg_decoder 
@@ -194,11 +205,11 @@ sevenseg_decoder_inst: sevenseg_decoder
      o_seg_n => w_seg_out
      );
      
-
-with w_sign select
-seg <= w_seg_out when "0001",  
-         "0000001" when "0000",
-         "1010101" when others;
+seg <= w_seg_out;
+--with w_sign select
+--seg <= w_seg_out when "0000",  
+--         "0111111" when "0001",
+--         "1010101" when others;--- test case
 	-- CONCURRENT STATEMENTS ----------------------------
 	
 
