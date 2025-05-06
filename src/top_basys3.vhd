@@ -216,10 +216,12 @@ an <= w_sel;
 led(3 downto 0) <= w_cycle;
 
 
-seg <= w_seg_out when not(w_sel = "0111") else
+seg <= "1111111" when w_cycle= "1000" else
+         w_seg_out when not(w_sel = "0111") else
          "0111111" when (w_sign = "0001") else
          "1111111";--- test case
 	-- CONCURRENT STATEMENTS ----------------------------
 	
-
+--doc: C3C Anders looked over my work to help see why I was getting an error on one of the flags on the test bench, the problem was I mistakenly had a 1 where it should have been a 0
+--      We used chatGPT when we were stuck on new parts that we had not learned yet. We did not overlly use this tool or directly paste sections of code from it
 end top_basys3_arch;
