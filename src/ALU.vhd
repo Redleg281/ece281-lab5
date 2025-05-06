@@ -91,7 +91,7 @@ begin
     w_ResOr <= i_A or i_B;
     
     
-MuxProc: process(i_A,i_B,i_Op,W_ResAdd,w_ResSub,w_CoutAdd,w_CoutSub)
+MuxProc: process(i_A,i_B,i_Op,W_ResAdd,w_ResSub,w_CoutAdd,w_CoutSub,w_result)
 begin 
 
     if i_Op = "000" then
@@ -107,7 +107,7 @@ begin
     end if;
 
     
- ---------- Flags
+ ---------- 
  
     if w_result = "00000000" then
         w_zeroFlag <= '1';
