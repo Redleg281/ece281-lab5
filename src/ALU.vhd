@@ -131,9 +131,9 @@ begin
     
     if (i_A(7) xor i_B(7) xor i_Op(0)) = '0'
        and
-       (i_A(7) xor (w_ResAdd(7) or w_ResSub(7))) = '1'
+       (i_A(7) xor (w_ResSub(7))) = '1'
        and
-       i_Op(1) = '1' then
+       i_Op(1) = '0' then
        w_overflowFlag <= '1';
        else w_overflowFlag <= '0';
     end if;
