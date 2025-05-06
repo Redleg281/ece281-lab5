@@ -61,6 +61,9 @@ signal w_sign: std_logic_vector(3 downto 0);
 
 signal w_hex: std_logic_vector(3 downto 0);
 signal w_seg_out: std_logic_vector(6 downto 0);
+
+signal w_sel: std_logic_vector(3 downto 0);
+
   
   
 	-- declare components and signals
@@ -198,7 +201,7 @@ TDM4_inst: TDM4
         i_D1 => w_tens,
         i_D0 => w_ones,
         o_data => w_hex,
-        o_sel => an
+        o_sel => w_sel      
 	);
 	
 sevenseg_decoder_inst: sevenseg_decoder 
@@ -207,12 +210,15 @@ sevenseg_decoder_inst: sevenseg_decoder
      o_seg_n => w_seg_out
      );
      
-seg <= w_seg_out;
+--seg <= w_seg_out;
+ 
+an <= w_sel;
 led(3 downto 0) <= w_cycle;
---with w_sign select
---seg <= w_seg_out when "0000",  
---         "0111111" when "0001",
---         "1010101" when others;--- test case
+
+
+seg <= w_seg_out when not(w_sel = "0111") else
+         "0111111" when (w_sign = "0001") else
+         "1111111";--- test case
 	-- CONCURRENT STATEMENTS ----------------------------
 	
 
